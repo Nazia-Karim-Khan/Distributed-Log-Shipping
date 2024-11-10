@@ -26,14 +26,14 @@ spec:
             - name: data-volume
               mountPath: /loki
           securityContext:
-            runAsUser: 1000  # Ensure the Loki container runs as user 1000
+            runAsUser: 1000  
       volumes:
         - name: config-volume
           configMap:
             name: loki-config
         - name: data-volume
           persistentVolumeClaim:
-            claimName: loki-pvc  # Or use a hostPath volume
+            claimName: loki-pvc 
 ---
 apiVersion: v1
 kind: Service

@@ -13,11 +13,13 @@ spec:
       labels:
         app: promtail
     spec:
+      serviceAccountName: promtail
       containers:
         - name: promtail
           image: grafana/promtail:2.8.2
           args:
             - "-config.file=/etc/promtail/promtail.yaml"
+            - "-log.level=debug"  # Add this line to enable debug-level logging
           volumeMounts:
             - name: config-volume
               mountPath: /etc/promtail
@@ -34,7 +36,6 @@ spec:
             capabilities:
               add:
                 - SYS_RESOURCE
-          # Increase the file descriptor limit at container level
           env:
             - name: FS_FILE_MAX
               value: "65536"  # Increase the file descriptor limit
