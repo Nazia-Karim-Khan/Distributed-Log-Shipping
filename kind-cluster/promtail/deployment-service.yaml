@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: promtail
+  namespace: promtail
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: promtail
+  template:
+    metadata:
+      labels:
+        app: promtail
+    spec:
+      containers:
+        - name: promtail
+          image: grafana/promtail:2.8.2
+          args:
+            - "-config.file=/etc/promtail/promtail.yaml"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/promtail
+            - name: positions
+              mountPath: /tmp
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          securityContext:
+            capabilities:
+              add:
+                - SYS_RESOURCE
+          # Increase the file descriptor limit at container level
+          env:
+            - name: FS_FILE_MAX
+              value: "65536"  # Increase the file descriptor limit
+      volumes:
+        - name: config-volume
+          configMap:
+            name: promtail-config
+        - name: positions
+          emptyDir: {}
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: promtail
+  namespace: promtail
+spec:
+  selector:
+    app: promtail
+  ports:
+    - protocol: TCP
+      port: 9080        
+      targetPort: 9080   
+      nodePort: 30088  
+  type: NodePort         

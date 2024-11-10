@@ -1,0 +1,14 @@
+apiVersion: v1
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: loki-pv
+spec:
+  capacity:
+    storage: 10Gi  # Ensure this matches the PVC size (e.g., 10Gi)
+  accessModes:
+    - ReadWriteOnce  # Ensure this matches the PVC access mode
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard  # This must match the PVC's storageClassName
+  hostPath:
+    path: /mnt/data/loki  # This path should exist on your node
