@@ -67,20 +67,6 @@ data:
           - action: replace
             source_labels: [__meta_kubernetes_pod_container_name]
             target_label: __path__
-            replacement: /var/log/containers/*${__meta_kubernetes_pod_name}_${__meta_kubernetes_namespace}_${__meta_kubernetes_pod_container_name}.log
+            replacement: /var/log/pods/*/*.log
 
-    # Configuration for scraping logs directly from Kubernetes API
-      - job_name: kubernetes-logs
-        kubernetes_sd_configs:
-          - role: pod
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_name]
-            target_label: pod_name
-          - source_labels: [__meta_kubernetes_namespace]
-            target_label: namespace
-          - source_labels: [__meta_kubernetes_pod_container_name]
-            target_label: container
-          - action: replace
-            source_labels: [__meta_kubernetes_pod_container_name]
-            target_label: __path__
-            replacement: /var/log/containers/*${__meta_kubernetes_pod_name}_${__meta_kubernetes_namespace}_${__meta_kubernetes_pod_container_name}.log
+
